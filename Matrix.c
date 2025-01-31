@@ -74,7 +74,7 @@ void desenho_pio(double *desenho, PIO pio, uint sm, double r, double g, double b
     {
         if (desenho[i] != 0.0) // Verifica se o valor no vetor é diferente de zero
         {
-            uint32_t valor_led = matrix_rgb(r, g, b, 0.01);
+            uint32_t valor_led = matrix_rgb(r, g, b, 0.3);
             pio_sm_put_blocking(pio, sm, valor_led);
         }
         else
