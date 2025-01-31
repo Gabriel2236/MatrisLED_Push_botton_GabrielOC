@@ -17,7 +17,7 @@ cont:
 % c-sdk {
 static inline void Matrix_program_init(PIO pio, uint sm, uint offset, uint pin)
 {
-    pio_sm_config c = Matrix_program_init_program_get_default_config(offset);
+    pio_sm_config c = Matrix_program_get_default_config(offset);
 
     // Set pin to be part of set output group, i.e. set by set instruction
     sm_config_set_set_pins(&c, pin, 1);
