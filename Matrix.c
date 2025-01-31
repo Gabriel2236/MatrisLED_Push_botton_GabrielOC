@@ -74,7 +74,7 @@ void desenho_pio(double *desenho, PIO pio, uint sm, double r, double g, double b
     {
         if (desenho[i] != 0.0) // Verifica se o valor no vetor é diferente de zero
         {
-            uint32_t valor_led = matrix_rgb(r, g, b, 0.15);
+            uint32_t valor_led = matrix_rgb(r, g, b, 0.01);
             pio_sm_put_blocking(pio, sm, valor_led);
         }
         else
@@ -179,7 +179,7 @@ int main()
     PIO pio = pio0;
     bool ok;
     uint32_t valor_led;
-    double r = 0.3, g = 0.0, b = 0.7; // Escolha a cor desejada (neste exemplo, verde)
+    double r = 0.5, g = 0.0, b = 0.7; // Escolha a cor desejada (neste exemplo, roxo)
 
     // Configura o clock para 128 MHz
     ok = set_sys_clock_khz(128000, false);
