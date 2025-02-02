@@ -15,8 +15,8 @@
 #define LED_R 13
 
 // Define os push bottons
-#define BOTTON_inc 6
-#define BOTTON_dec 5
+#define BOTTON_inc 5
+#define BOTTON_dec 6
 
 // Definições da matriz de LEDs
 #define NUM_PIXELS 25
@@ -35,12 +35,12 @@ void imprimir_binario(int num)
 
 //sistema de repetição que incrementa e decrementa o contador com o debounce
 uint32_t last_time = 0;
-uint num = 0;
+int num = 0;
 
 void gpio_irq_handler(uint gpio, uint32_t events) {
     uint32_t current_time = to_us_since_boot(get_absolute_time());
 
-    if (current_time - last_time > 200000) {
+    if (current_time - last_time > 300000) {
         if (gpio == BOTTON_inc ) {
             num++;
         } else if (gpio == BOTTON_dec) {
@@ -49,6 +49,13 @@ void gpio_irq_handler(uint gpio, uint32_t events) {
 
         last_time = current_time;
     }
+}
+
+void setup_gpio_interrupt(uint gpio_pin, gpio_irq_callback_t callback) {
+    gpio_init(gpio_pin);
+    gpio_set_dir(gpio_pin, GPIO_IN);
+    gpio_pull_up(gpio_pin);
+    gpio_set_irq_enabled_with_callback(gpio_pin, GPIO_IRQ_EDGE_FALL, true, callback);
 }
 
 // Função para configurar a matriz de LEDs
@@ -163,18 +170,15 @@ int main()
     // Inicializa comunicação serial
     stdio_init_all();
 
+    setup_gpio_interrupt(BOTTON_inc, gpio_irq_handler);
+    setup_gpio_interrupt(BOTTON_dec, gpio_irq_handler);
+
     // Inicializa os pinos GPIO
     gpio_init(LED_R);
     gpio_set_dir(LED_R, GPIO_OUT);
     gpio_put(LED_R, 0); // Inicialmente apaga o LED
 
-    gpio_init(BOTTON_inc);
-    gpio_set_dir(BOTTON_inc, GPIO_IN);
-    gpio_pull_up(BOTTON_inc); // Habilita o pull-up interno
 
-    gpio_init(BOTTON_dec);
-    gpio_set_dir(BOTTON_dec, GPIO_IN);
-    gpio_pull_up(BOTTON_dec); // Habilita o pull-up interno
 
     PIO pio = pio0;
     bool ok;
